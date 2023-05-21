@@ -1,0 +1,10 @@
+
+div.game_row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /*align-items: center;*/
+    font-size: xx-large;
+    font-family: monospace;
+    cursor: pointer;
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Os And Xs</title>
+        <link rel="stylesheet" href="assets/styles.css">
+    </head>
+    <body>
+        <h1>Knoughts And Crosses</h1>
+
+        <div id="div-form">
+            <form id="form-player" action="" onsubmit="joinGame(event)">
+                <input type="text" id="text-player-name" autocomplete="off" placeholder="Player Name"/>
+                <button id="button-join">Join</button>
+            </form>
+        </div>
+
+        <div id="div-board" style="display: none; flex-direction: column;">
+            <div id="div-top-row" class="game_row">
+                <div id="div-cell-0" onclick="addSymbol(0)">-</div>
+                <div id="div-cell-1" onclick="addSymbol(1)">-</div>
+                <div id="div-cell-2" onclick="addSymbol(2)">-</div>
+            </div>
+            <div id="div-middle-row" class="game_row">
+                <div id="div-cell-3" onclick="addSymbol(3)">-</div>
+                <div id="div-cell-4" onclick="addSymbol(4)">-</div>
+                <div id="div-cell-5" onclick="addSymbol(5)">-</div>
+            </div>
+            <div id="div-middle-row" class="game_row">
+                <div id="div-cell-6" onclick="addSymbol(6)">-</div>
+                <div id="div-cell-7" onclick="addSymbol(7)">-</div>
+                <div id="div-cell-8" onclick="addSymbol(8)">-</div>
+            </div>
+        </div>
+        
+        <script>
+            let game_id = null;
+            var client_id = Date.now();
+            var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+
+            ws.onmessage = function(event) {
+                event = JSON.parse(event.data);
+                console.log(`Received event: ${event.event} with data: ${event.data}`);
+                switch(event.event){
+                    case "game_created":
+                        startGame(event.data)
+                        break;
+                    case "game_pending":
+                        gamePending()
+                        break;
+                    case "add_symbol":
+                        add_symbol(event.data);
+                        break;
+                    default:
+                        console.log(`Unexpected event: ${event}`);
+                }
+            };
+
+            function startGame(data){
+                console.log("Starting game");
+                var board = document.getElementById("div-board");
+                board.style.display = "flex";
+                game_id = data.game_id;
+            };
+
+            function gamePending(){
+                console.log("Game Pending");
+                var board = document.getElementById("div-board");
+                board.style.display = "flex";
+                board.disabled = true;
+            };
+
+            function add_symbol(data){
+                console.log("Adding symbol");
+                var cell = document.getElementById(`div-cell-${data.location}`);
+                cell.innerHTML = data.symbol;
+            };
+
+            function addSymbol(location){
+                console.log(`game-id: ${game_id}`);
+                ws.send(JSON.stringify({"event": "add_symbol", "data": {"game_id": game_id, "location": location}}));
+            }
+
+
+            function joinGame(event) {
+                event.preventDefault();
+                var input = document.getElementById("text-player-name")
+                ws.send(JSON.stringify({"event": "new_player", "data": {"player_name":input.value}}));
+                var button = document.getElementById("button-join")
+                button.disabled = true;
+            };
+
+        </script>
+    </body>
+</html>

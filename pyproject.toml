@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "knoughtsandcrosses"
+version = "0.1.0"
+description = ""
+authors = ["jimhendy <jimhendy88@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.95.0"}
+loguru
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Decrease the maximum line length to 79 characters.
+line-length = 120
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
