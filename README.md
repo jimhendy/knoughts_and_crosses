@@ -19,6 +19,25 @@ To access from outside `localhost` you must alter the websocket connection to us
 uvicorn server.main:app --host 0.0.0.0
 ```
 
+## Development
+
+This project uses `poetry`.
+
+1. Use `conda`/`mamba` to create a new virtual env: 
+```sh
+mamba create -n knoughts_n_crosses "python>3.11,<3.12" poerty
+```
+2. Activate the virtual env
+```sh
+mamba activate knoughts_n_crosses
+```
+3. Install the poerty dependencies (will install directly into the current virtual env.)
+```sh
+poetry install
+```
+4. Whenever you wish to use this code, simply activate the `conda` env (step 2.). No `poetry` commands are required after initial setup.
+
+
 ### ToDo
 * [ ] Landing Page to start new games
 * [ ] Strategy for initial connection. How to hit the FastAPI websocket route if not from localhost?
